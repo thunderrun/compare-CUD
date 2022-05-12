@@ -1,54 +1,95 @@
 # compare-CUD
 
-Save and restore window size and position
+Compare 2 array of objects and filter out create/update/delete objects
 
 ## Usage
 
 ```bash
-npm i 'save-window-size-position'
+npm i 'compare-cud'
 ```
 
 ```js
-// window.html
-import { saveWindowStateBeforeUnload, restoreWindowState } from 'save-window-size-position'
+import compare from './index.js';
 
-restoreWindowState();
-saveWindowStateBeforeUnload();
-```
+const newArray = [
+  {
+    id: 1,
+    a: 1,
+    b: 2
+  },
+  {
+    id: 2,
+    a: 1,
+    b: 2,
+    c: 3,
+  },
+  {
+    id: 4,
+    a: 0,
+  },
+  {
+    id: 5,
+    a: 1,
+  },
+];
 
-or
+const oldArray = [
+  {
+    id: 1,
+    a: 1,
+    b: 2
+  },
+  {
+    id: 2,
+    b: 2,
+    c: 3,
+  },
+  {
+    id: 3,
+    d: 1,
+    b: 2,
+  },
+  {
+    id: 6,
+    d: 1,
+  },
+];
 
-```js
-// parent.html
-import { getSavedWindowState } from 'save-window-size-position';
+const result = compare(newArray, oldArray);
 
-window.open('./test.html', undefined, `popup=1,${getSavedWindowState()}`);
-// won't resize the window on open, but width and height are inaccurate (not only if the user zoomed)
-```
+/* result:
+{
+  "create": [
+      {
+          "id": 4,
+          "a": 0
+      },
+      {
+          "id": 5,
+          "a": 1
+      }
+  ],
+  "update": [
+      {
+          "id": 2,
+          "a": 1,
+          "b": 2,
+          "c": 3
+      }
+  ],
+  "delete": [
+      {
+          "id": 3,
+          "d": 1,
+          "b": 2
+      },
+      {
+          "id": 6,
+          "d": 1
+      }
+  ]
+}
 
-```js
-// window.html
-import { saveWindowStateBeforeUnload } from 'save-window-size-position'
-
-// restoreWindowState(); // resize to make the window size accurate
-saveWindowStateBeforeUnload();
-```
-
-### Parameters
-
-```js
-restoreWindowState(
-  defaultOuterWidth, 
-  defaultOuterHeight, 
-  defaultScreenX, 
-  defaultScreenY,
-);
-
-getSavedWindowState(
-  defaultInnerWidth, 
-  defaultInnerHeight, 
-  defaultScreenX, 
-  defaultScreenY,
-);
+*/
 ```
 
